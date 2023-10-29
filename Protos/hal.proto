@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcService1";
+
+package hal;
+
+// The Hal service definition.
+service Hal {
+  // controll LEDs
+  rpc LEDon (HalLedState) returns (HalResponse);
+  rpc LEDoff (HalLedState) returns (HalResponse);
+}
+
+// The request message containing the user's name.
+message HalLedState {
+  int32 state = 1;
+}
+
+// The response message containing the greetings.
+message HalResponse {
+  string message = 1;
+}
