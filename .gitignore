@@ -477,3 +477,12 @@ $RECYCLE.BIN/
 *.lnk
 
 appsettings.json
+
+#python 
+
+python_listener/vosk-us
+
+#nodejs
+
+interface/node_modules
+interface/.env

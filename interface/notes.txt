@@ -1,0 +1,7 @@
+https://socket.io/get-started/chat/
+
+
+copy .env copy file and rename to .env
+set openai key
+change ip address of grpc server
+install packages npm install

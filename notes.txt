@@ -1,0 +1,48 @@
+https://dev.to/techiesdiary/net-60-grpc-server-and-client-implementation-77m
+https://www.youtube.com/watch?v=U8kTRj1wfPc
+
+
+rpi(pc2) ir pc1 sujungimas:
+
+sujungti ethernet kebeliu rpi ir pc1
+pc1 nueiti i adapter settings ir pasirinkti eth adaptoriu, IPv4 settings parinkti static ip adresa (192.168.1.1)
+rpi atidaryti wireless an wired network settings ir ant interface eth0 parinkti static ip 192.168.1.2 
+gali tkti perkrauti rpi/ isjungti-ijungti wifi, kad susikonfiguruotu adapteris (uzvedus pele ant interneto panel item virsuje turi rasyti eth0: configured)
+
+prisijungti per sftp
+
+host sftp://192.168.1.2 pi 7895 22
+
+instaliuoti dotnet sdk ant rpi
+wget -O - https://raw.githubusercontent.com/pjgpetecodes/dotnet6pi/master/install.sh | sudo bash
+
+kad serveris veiktu ne tik local host bet butu pasiekiamas kitam kompiuteriui reikia pakeisti ip adresa ant kurio jis klauso 
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    
+        options.Listen(IPAddress.Parse("192.168.1.2"), 5000);
+});
+
+jei vis dar neina siusti call i grpc serveri gali reikti sukonfiguruoti firewall
+
+kad zinot ant kokio serial port yra priskirtas arduino paprasciausiai yra isisrasyti arduino ide ten iskart yra parasyta
+
+serial port for arduino
+https://support.arduino.cc/hc/en-us/articles/360016495679-Fix-port-access-on-Linux
+
+
+Paleidimas:
+
+paleisti python script'a
+paleisti nodejs app ir atidaryti inteface per narsykle
+paleisti irenginiu manager programa
+prijungti arduino
+
+veikimas:
+
+1) python programa klauso komandos 
+2) gavus komanda issiunciama http uzklausa i interface serveri
+3) chat gpt perduoda atsakyma i narsykle per socket arba iskviecia funkcija
+4) funkcija per grpc kanala ivykdo kita funkcija device manager kompiuteryje ir per serial port perduota nurodyma arduinui
+5) arduinas kontroliuoja prietaisa

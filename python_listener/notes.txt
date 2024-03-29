@@ -1,0 +1,9 @@
+pip install python-dotenv -install dotenv lib
+
+pip install vosk
+pip install pyaudio
+
+i sita aplanka ideti vosk kalbos atpazinimo modeli ir pavadinti "vosk-us"
+
+modeli reikia isarchyvuoti
+modelius parsisiusti is  https://alphacephei.com/vosk/models

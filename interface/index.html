@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=aE34wlCl"></script>
+<style>
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 85vh;
+    }
+</style>
+
+<body style="background-color: black;">
+    <button onclick="test()" style="background-color: black;">_</button>
+    <div class="center">
+        <img id="halimage" src="pic.jpg">
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        var socket = io();
+
+        var flicker_Interval;
+
+        var messages = document.getElementById('messages');
+
+        socket.on('add_query', function (msg) {
+            console.log(msg);
+            //<ul id="messages"></ul>
+            //var item = document.createElement('li');
+            //item.textContent = msg;
+            //messages.appendChild(item);
+            //window.scrollTo(0, document.body.scrollHeight);
+            speak(msg);
+        });
+
+        function speak(message) {
+
+            responsiveVoice.speak(message, "UK English Male", { rate: 1, pitch: 0.6, onstart: flicker_start, onend: flicker_end });
+
+        }
+
+        async function test() {
+
+
+        }
+
+        function flicker_start() {
+            flicker_Interval = setInterval(function () {
+                flicker();
+            }, 100);
+        }
+
+        function flicker_end() {
+
+            clearInterval(flicker_Interval);
+            var image = document.getElementById('halimage');
+            image.style.opacity = 1;
+        }
+
+        function flicker() {
+            var image = document.getElementById('halimage');
+            var opacity = Math.random() + 0.6;
+            image.style.opacity = opacity;
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>
