@@ -15,7 +15,7 @@ class HalDeviceManager {
         }
 
         return new Promise((resolve, reject) => {
-            this.client.LIGHTOn(halState, (err, data) => {
+            this.client.LIGHTon(halState, (err, data) => {
                 if (err) {console.log(err); reject("there was en error while turning the ligh on")}
                 resolve(data);
             })
@@ -28,7 +28,7 @@ class HalDeviceManager {
         }
 
         return new Promise((resolve, reject) => {
-            this.client.LIGHTOff(halState, (err, data) => {
+            this.client.LIGHToff(halState, (err, data) => {
                 if (err) {console.log(err); reject("there was en error while turning the ligh off")}
                 resolve(data);
             })

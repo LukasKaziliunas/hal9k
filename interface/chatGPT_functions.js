@@ -1,4 +1,5 @@
 const { HalDeviceManager } = require('./HalDeviceManager')
+const { getWeather } = require('./weather_service')
 
 const hdm = new HalDeviceManager();
 
@@ -12,15 +13,15 @@ const functions = [
           "location": {
             "type": "string",
             "description": "The city and state, e.g. San Francisco, CA",
-          },
-          "unit": { "type": "string", "enum": ["celsius", "fahrenheit"] },
+          }
+          
         },
         "required": ["location"],
       },
     },
     {
       "name": "light_turn_on",
-      "description": "Turns on the light in the room if its dark or if the user requests the light to be turned on",
+      "description": "Use this function if the light needs to be turned on or if theres too dark",
       "parameters": {
         "type": "object",
         "properties": {},
@@ -29,7 +30,25 @@ const functions = [
     },
     {
       "name": "light_turn_off",
-      "description": "Turns off the light in the room if the user requests the light to be turned off",
+      "description": "Use this function if the light needs to be turned off",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+      },
+    },
+    {
+      "name": "cart_deliver",
+      "description": "Use this function to deliver food cart to the user",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+      },
+    },
+    {
+      "name": "cart_return",
+      "description": "Use this function to return the food cart",
       "parameters": {
         "type": "object",
         "properties": {},
@@ -38,39 +57,43 @@ const functions = [
     }
   ];
 
-  function getCurrentWeather(location, unit = "fahrenheit") {
-    const weatherInfo = {
-      "location": location,
-      "temperature": "72",
-      "unit": unit,
-      "forecast": ["sunny", "windy"],
-    };
-    return JSON.stringify(weatherInfo);
+  function getCurrentWeather(location) {
+    return new Promise((resolve, reject) => {
+      console.log('***************************************')
+      console.log('Getting weather forcast in Kaunas')
+      console.log('***************************************')
+      getWeather('kaunas').then(res => resolve({ message: JSON.stringify(res) })).catch(err => reject(err))
+
+    })
+    
   }
   
   function lightTurnOn() {
     
-    return hdm.ledOn();
+    return hdm.lightOn();
     
   }
   
   function lightTurnOff() {
   
-    return hdm.ledOff();
+    return hdm.lightOff();
+  }
+
+  function cartDeliver(){
+    return hdm.CartDeliver();
+  }
+
+  function cartReturn(){
+    return hdm.CartReturn();
   }
   
   const availableFunctions = {
     get_current_weather: getCurrentWeather,
     light_turn_on: lightTurnOn,
-    light_turn_off: lightTurnOff
+    light_turn_off: lightTurnOff,
+    cart_deliver: cartDeliver,
+    cart_return: cartReturn
   };
-
-/*
-  (async () => {
-    //var a = await lightTurnOn().then((resp) => { return resp.message }).catch((err) => { return err });
-    //console.log(a)
-})();
-*/
   
 
   module.exports.functions = functions
@@ -78,3 +101,5 @@ const functions = [
   module.exports.getCurrentWeather = getCurrentWeather;
   module.exports.lightTurnOn = lightTurnOn;
   module.exports.lightTurnOff = lightTurnOff;
+  module.exports.cartDeliver = cartDeliver;
+  module.exports.cartReturn = cartReturn;

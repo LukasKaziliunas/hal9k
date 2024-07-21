@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const port = 3000
-//const OpenAI = require("openai");
 
 const { MyOpenAi } = require('./openai');
 
@@ -29,7 +28,7 @@ app.get('/interface', async (req, res) => {
 })
 
 app.get('/test', async (req, res) => {
-
+  console.log("test endpoint hit")
 res.send();
 })
 
@@ -41,11 +40,13 @@ app.post('/query', async (req, res) => {
 
   openai.add_message(new_msg)
 
-  let m = await openai.call_openAi();
-  console.log(openai.messages);
-  console.log(m)
-  io.emit('add_query', m);
-  res.send(m)
+  openai.call_openAi().then((message) => {
+    console.log(openai.messages);
+    console.log(message)
+    io.emit('add_query', message);
+  });
+  
+  res.send("recieved");
 })
 
 server.listen(port, () => {

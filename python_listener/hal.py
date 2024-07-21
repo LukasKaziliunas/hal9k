@@ -20,7 +20,7 @@ stream.start_stream()
 
 # Loop through the audio stream
 while True:
-   data = stream.read(4000)
+   data = stream.read(4000, exception_on_overflow = False)
 
    if rec.AcceptWaveform(data):
         result = json.loads(rec.Result())

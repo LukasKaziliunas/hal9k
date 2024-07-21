@@ -12,7 +12,7 @@ namespace GrpcService1.Services
 
         public override Task<HalResponse> LIGHTon(HalLightState request, ServerCallContext context)
         {
-            scc.WriteToSerial("turn on");
+            scc.WriteToSerial("LAMP:ON");
             var response = new HalResponse{ Message = "the light is turned on" };
 
             return Task.FromResult(response);
@@ -20,7 +20,7 @@ namespace GrpcService1.Services
 
         public override Task<HalResponse> LIGHToff(HalLightState request, ServerCallContext context)
         {
-            scc.WriteToSerial("turn off");
+            scc.WriteToSerial("LAMP:OFF");
             var response = new HalResponse { Message = "the light is turned off" };
 
             return Task.FromResult(response);

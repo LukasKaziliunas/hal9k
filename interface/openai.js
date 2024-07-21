@@ -2,8 +2,7 @@ const OpenAI = require("openai");
 const cf = require('./chatGPT_functions');
 require('dotenv').config()
 
-if(process.env.OPENAI_KEY == "" || process.env.OPENAI_KEY == undefined)
-{
+if (process.env.OPENAI_KEY == "" || process.env.OPENAI_KEY == undefined) {
     console.error("openAi key is not set");
 }
 
@@ -41,26 +40,21 @@ class MyOpenAi {
             const functionName = responseMessage.function_call.name;
             const functionToCall = cf.availableFunctions[functionName];
 
-            var functionResponse;
+            var functionResponse = "";
+            const functionArgs = JSON.parse(responseMessage.function_call.arguments);
+            var argsArray = Object.values(functionArgs)
+            console.log("|");
+            console.log(`calling ${functionName} with arguments: ` + argsArray);
 
-            if (functionName == 'get_current_weather') {
-                const functionArgs = JSON.parse(responseMessage.function_call.arguments);
-                functionResponse = functionToCall(
-                    functionArgs.location,
-                    functionArgs.unit,
-                );
-            }
-            else if (functionName == 'light_turn_on') {
-                
-                functionResponse = await functionToCall().then((resp) => { return resp.message }).catch((err) => { return err });
-            }
-            else if (functionName == 'light_turn_off') {
-                
-                functionResponse = await functionToCall().then((resp) => { return resp.message }).catch((err) => { return err });
+            if (functionToCall != undefined) {
+                functionResponse = await functionToCall(...argsArray).then((resp) => { return resp.message }).catch((err) => { return err });
+                console.log(`the function response :`);
+                console.log(functionResponse);
             }
             else {
                 functionResponse = "function could not be called, tell the user that the request cannot be completed"
             }
+
 
             this.messages.push(responseMessage);  // extend conversation with assistant's reply
             this.messages.push({
@@ -87,13 +81,11 @@ class MyOpenAi {
         }
     }
 
-    add_message(message)
-    {
+    add_message(message) {
         this.messages.push(message);
     }
 
-    get messages()
-    {
+    get messages() {
         return this.messages;
     }
 

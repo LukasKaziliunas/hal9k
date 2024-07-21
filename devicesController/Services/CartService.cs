@@ -10,11 +10,18 @@ namespace devicesController.Services
         private static volatile CartService instance;
         private bool locked = false;
         private String position = "home";
-    
+
+        private String cartDeliverScript;
+        private String cartReturnScript;
+
+
         private CartService()
         {
+            var conf = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
-           
+            cartDeliverScript = conf.GetSection("env")["cartDeliverScript"];
+            cartReturnScript = conf.GetSection("env")["cartReturnScript"];
+
         }
 
         //create/retrieve sigleton
@@ -53,6 +60,15 @@ namespace devicesController.Services
 
         private async Task<int> deliverCartTask() 
         {
+            String[] commands = cartDeliverScript.Split(';');
+
+            foreach (String command in commands)
+            {
+                int time = int.Parse(command.Split('-')[1]);
+                scc.WriteToSerial(command);
+                await Task.Delay( (1 + time) * 1000 );
+            }
+            /*
             scc.WriteToSerial("CART:F-1");
             await Task.Delay(3000);
             scc.WriteToSerial("CART:FL-1");
@@ -60,6 +76,7 @@ namespace devicesController.Services
             scc.WriteToSerial("CART:FR-1");
             await Task.Delay(3000);
             scc.WriteToSerial("CART:F-3");
+            */
             await Task.Delay(5000);
             position = "B";
             locked = false;
@@ -68,6 +85,15 @@ namespace devicesController.Services
 
         private async Task<int> returnCartTask()
         {
+            String[] commands = cartReturnScript.Split(';');
+
+            foreach (String command in commands)
+            {
+                int time = int.Parse(command.Split('-')[1]);
+                scc.WriteToSerial(command);
+                await Task.Delay((1 + time) * 1000);
+            }
+            /*
             scc.WriteToSerial("CART:BR-1");
             await Task.Delay(3000);
             scc.WriteToSerial("CART:FL-1");
@@ -75,6 +101,7 @@ namespace devicesController.Services
             scc.WriteToSerial("CART:BR-1");
             await Task.Delay(3000);
             scc.WriteToSerial("CART:F-3");
+            */
             await Task.Delay(5000);
             position = "home";
             locked = false;
